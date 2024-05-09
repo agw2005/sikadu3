@@ -99,17 +99,31 @@ struct LinkedList{
         }
     }
 
-
-
-    bool noKnownID(int flag){
-        Node* current = head;
-        for(int i = 1 ; i <= population ; i++){
-            if(current->id == flag){return false;}
-            else{
-                current = current -> next;
+    void deleteName(std::string& flag){
+        if(population == 0){
+            std::cout << "There are no elements inside the list\n";
+        } else {
+            if (head->name == flag) {
+                deleteHead();
+            }
+            Node *current = head;
+            Node *previous = nullptr;
+            while (current != nullptr) {
+                if (current->name == flag) {
+                    if (current == tail) {
+                        previous->next = nullptr;
+                        tail = previous;
+                    } else {
+                        previous->next = current->next;
+                    }
+                    delete current;
+                    population--;
+                    return;
+                }
+                previous = current;
+                current = current->next;
             }
         }
-        return true;
     }
 
     void printComplete() const{
@@ -141,7 +155,7 @@ struct LinkedList{
         std::cout<<std::endl;
     }
 
-    bool duplicateName(std::string& flag){
+    bool duplicateName(std::string& flag) const{
         Node* current = head;
         for(int i = 1 ; i <= population ; i++){
             if(current->name == flag){return true;}
@@ -152,7 +166,7 @@ struct LinkedList{
         return false;
     }
 
-    bool duplicateID(long long flag){
+    [[nodiscard]] bool duplicateID(long long flag) const{
         Node* current = head;
         for(int i = 1 ; i <= population ; i++){
             if(current->id == flag){return true;}
@@ -186,10 +200,18 @@ void uppercaseGender(char& flag){
     }
 }
 
+void capitalize(std::string& str) {
+    for (int i = 0; i < str.length(); i++) {
+        if (i == 0 || (str[i - 1] == ' ' && i < str.length())) {
+            str[i] = std::toupper(str[i]);
+        }
+    }
+}
+
 int main() {
     //Declarations
     std::string mainMenu = "1. Add student\n2. Delete student\n3. List students\n4. Create a task\n5. Insert a grade\n6. Exit\n";
-    std::string deleteMenu = "1. Delete newest\n2. Delete oldest\n3. Delete by index\n4. Delete by name\n5. Cancel\n";
+    std::string deleteMenu = "1. Delete newest\n2. Delete oldest\n3. Delete by index\n4. Delete by name\n5. Back to main menu\n";
     int menuInput;
     long long idInput;
     float gpaInput;
@@ -212,6 +234,7 @@ int main() {
                 do{
                     std::cout << "Enter the name of the student:\n";
                     std::getline(std::cin, nameInput);
+                    capitalize(nameInput);
                     horizontalLine();
                     if(test.duplicateName(nameInput)){
                         std::cout << "The student by that name already exist! Please try again.\n";
@@ -287,8 +310,8 @@ int main() {
                                 do {
                                     std::cout << "What is the ID of the student you want to delete?\n";
                                     std::cin >> menuInput;
-                                    if (test.noKnownID(menuInput)){
-                                        std::cout << "There is no student of that ID number\n";
+                                    if (!test.duplicateID(menuInput)){
+                                        std::cout << "There is no student by that ID number\n";
                                     } else {
                                         test.deleteID(menuInput);
                                         notValid = false;
@@ -297,6 +320,17 @@ int main() {
                                 break;
                             case 4:
                                 //Delete by name
+                                do {
+                                    std::cout << "What is the name of the student you want to delete?\n";
+                                    std::cin >> nameInput;
+                                    capitalize(nameInput);
+                                    if (!test.duplicateName(nameInput)){
+                                        std::cout << "There is no student by that name\n";
+                                    } else {
+                                        test.deleteName(nameInput);
+                                        notValid = false;
+                                    }
+                                } while (notValid);
                                 break;
                             case 5:
                                 deletionIsRunning = false;
@@ -311,13 +345,14 @@ int main() {
                 }
                 break;
             case 3:
+                //Prints the list
                 test.printComplete();
                 break;
             case 4:
-                //
+                //Create task
                 break;
             case 5:
-                //
+                //Insert grade
                 break;
             case 6:
                 programIsRunning = false;
