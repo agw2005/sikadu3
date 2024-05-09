@@ -35,55 +35,81 @@ struct LinkedList{
     }
 
     void deleteTail(){
-        Node* current = head;
-        if(population == 0){
-            std::cout<<"There is no elements inside the list\n";
-        } else{
-            if(population == 1){
-                delete current;
-                tail = nullptr;
-                head = nullptr;
-            } else if(current->next == tail){
-                delete (current->next);
-                current -> next = nullptr;
-                tail = current;
+        if(population == 0) {
+            std::cout << "There are no elements inside the list\n";
+        } else {
+            Node *current = head;
+            Node *previous = nullptr;
+            while (current->next != nullptr) {
+                previous = current;
+                current = current->next;
             }
-            population--;
+            if (previous != nullptr) {
+                tail = previous;
+                tail->next = nullptr;
+            } else {
+                head = nullptr;
+                tail = nullptr;
+            }
+            delete current;
         }
+        population--;
     }
 
     void deleteHead(){
-        Node* temp = head;
         if(population == 0){
-            std::cout<<"There is no elements inside the list\n";
-        } else{
-            if(population == 1){
-                delete temp;
-                tail = nullptr;
-                head = nullptr;
-            } else{
-                head = head -> next;
-                delete temp;
-            }
+            std::cout << "There are no elements inside the list\n";
+        } else {
+            Node *temp = head;
+            head = head->next;
+            delete temp;
+
             population--;
+
+            if (head == nullptr) {
+                tail = nullptr;
+            }
         }
     }
 
-    void deleteIndex(int index){
-        Node* current = head;
-        if (index == 1) {
-            deleteHead();
-        } else if(index == population){
-            deleteTail();
-        } else{
-            for(int i = 1; i < index; i++) {
+    void deleteID(long long flag){
+        if(population == 0){
+            std::cout << "There are no elements inside the list\n";
+        } else {
+            if (head->id == flag) {
+                deleteHead();
+            }
+            Node *current = head;
+            Node *previous = nullptr;
+            while (current != nullptr) {
+                if (current->id == flag) {
+                    if (current == tail) {
+                        previous->next = nullptr;
+                        tail = previous;
+                    } else {
+                        previous->next = current->next;
+                    }
+                    delete current;
+                    population--;
+                    return;
+                }
+                previous = current;
                 current = current->next;
             }
-            Node* temp = current->next;
-            current->next = temp->next;
-            delete temp;
-            population--;
         }
+    }
+
+
+
+    bool noKnownID(int flag){
+        Node* current = head;
+        for(int i = 1 ; i <= population ; i++){
+            if(current->id == flag){return false;}
+            else{
+                current = current -> next;
+            }
+        }
+        return true;
     }
 
     void printComplete() const{
@@ -257,14 +283,14 @@ int main() {
                                 test.deleteHead();
                                 break;
                             case 3:
-                                //Delete by index
+                                //Delete by ID
                                 do {
-                                    std::cout << "Which roll number do you want to delete?\n";
+                                    std::cout << "What is the ID of the student you want to delete?\n";
                                     std::cin >> menuInput;
-                                    if (test.population < menuInput && menuInput > 1) {
-                                        std::cout << "There is no student of that roll number\n";
+                                    if (test.noKnownID(menuInput)){
+                                        std::cout << "There is no student of that ID number\n";
                                     } else {
-                                        test.deleteIndex(menuInput);
+                                        test.deleteID(menuInput);
                                         notValid = false;
                                     }
                                 } while (notValid);
