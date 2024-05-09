@@ -56,17 +56,27 @@ struct LinkedList{
     }
 
     void deleteTail(){
+        Node* current = head;
+        Node* previousCurrent = nullptr;
         if(population == 0){
-            std::cout << "There are no elements inside the list\n";
-        } else {
-            Node *temp = head;
-            head = head->next;
-            delete temp;
-            population--;
-            if (head == nullptr) {
-                tail = nullptr;
+            std::cout<<"List is empty!\n";
+        } else if(population == 1){
+            delete current;
+            tail = nullptr;
+            head = nullptr;
+        } else{
+            while(current != tail){
+                previousCurrent = current;
+                current = current -> next;
             }
+            //std::cout<<"Current : "<<current->val<<"\nPrevious : "<<previousCurrent->val<<std::endl;
+            // WORKING PROPERLY (current points to tail)
+
+            previousCurrent->next = nullptr;
+            tail = previousCurrent;
+            delete current;
         }
+        population--;
     }
 
     void deleteID(long long flag){
