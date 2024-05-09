@@ -139,31 +139,25 @@ struct LinkedList{
         population--;
     }
 
-    void deleteName(std::string& flag){
-        if(population == 0){
-            std::cout << "There are no elements inside the list\n";
-        } else {
-            if (head->name == flag) {
-                deleteHead();
-            }
-            Node *current = head;
-            Node *previous = nullptr;
-            while (current != nullptr) {
-                if (current->name == flag) {
-                    if (current == tail) {
-                        previous->next = nullptr;
-                        tail = previous;
-                    } else {
-                        previous->next = current->next;
-                    }
-                    delete current;
-                    population--;
-                    return;
-                }
-                previous = current;
-                current = current->next;
-            }
+    void deleteName(const std::string& flag){
+        Node* current = head;
+        Node* previousCurrent = nullptr;
+        while(current->name != flag){
+            previousCurrent = current;
+            current = current->next;
         }
+        if(current->next == nullptr){
+            previousCurrent->next = current->next;
+            tail = previousCurrent;
+            delete current;
+        } else if(current == head){
+            head = current -> next;
+            delete current;
+        } else{
+            previousCurrent->next = current->next;
+            delete current;
+        }
+        population--;
     }
 
     void printComplete() const{
@@ -383,6 +377,7 @@ int main() {
                                 std::cout << "What is the roll number of the student you want to delete?\n";
                                 horizontalLine();
                                 std::cin >> menuInput;
+                                horizontalLine();
                                 if(!test.duplicateID(menuInput)){
                                     std::cout<<"A student by that ID does not exist\n";
                                 } else {
@@ -393,25 +388,23 @@ int main() {
                                 break;
                             case 5:
                                 //Delete by name
-                                do {
-                                    std::cout << "What is the name of the student you want to delete?\n";
-                                    std::cin >> nameInput;
-                                    capitalize(nameInput);
-                                    if (!test.duplicateName(nameInput)){
-                                        std::cout << "There is no student by that name\n";
-                                    } else {
-                                        test.deleteName(nameInput);
-                                        notValid = false;
-                                    }
-                                } while (notValid);
+                                std::cout << "What is the name of the student you want to delete?\n";
+                                horizontalLine();
+                                std::cin >> nameInput;
+                                capitalize(nameInput);
+                                if (!test.duplicateName(nameInput)){
+                                    std::cout << "There is no student by that name\n";
+                                } else {
+                                    test.deleteName(nameInput);
+                                }
                                 deletionIsRunning = false;
+                                horizontalLine();
                                 break;
                             case 6:
                                 deletionIsRunning = false;
                                 break;
                             default:
-                                std::cout
-                                        << "The value you just entered is beyond our instruction, please try again.\n";
+                                std::cout<< "The value you just entered is beyond our instruction, please try again.\n";
                                 break;
                         }
                     } while (deletionIsRunning);
