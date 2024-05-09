@@ -17,7 +17,7 @@ struct LinkedList{
     Node* tail = nullptr;
     int population = 0;
 
-    void push_back(long long idInput, float ipkInput, std::string& namaInput, char genderInput){
+    void push_back(long long idInput, float ipkInput, std::string namaInput, char genderInput){
         Node* temp = new Node();
         temp -> id = idInput;
         temp -> gpa = ipkInput;
@@ -133,7 +133,7 @@ struct LinkedList{
             horizontalLine();
         } else{
             for (int i = 1; i <= population; i++) {
-                std::cout << "Index-" << i << " : " << current->name << " (NIM:" << current->id << ')' << std::endl;
+                std::cout << "Index-" << i << " : " << current->name <<" ("<<current->gender<< ") (NIM:" << current->id << ')' << std::endl;
                 if (current == tail) {
                     std::cout << "Next(NULL)\n";
                 } else {
@@ -166,7 +166,7 @@ struct LinkedList{
         return false;
     }
 
-    [[nodiscard]] bool duplicateID(long long flag) const{
+    bool duplicateID(long long flag) const{
         Node* current = head;
         for(int i = 1 ; i <= population ; i++){
             if(current->id == flag){return true;}
@@ -179,17 +179,31 @@ struct LinkedList{
 
 };
 
-void bubbleSortByID(LinkedList& flag) {
-    long long temp;
-    Node* current = flag.head;
+LinkedList bubbleSortByID(LinkedList flag) {
+    LinkedList result = flag;
+    long long tempID;
+    std::string tempName;
+    float tempGPA;
+    char tempGender;
+    Node* current = result.head;
     while (current->next != nullptr) {
         if (current->id > current->next->id) {
-            temp = current->next->id;
+            tempID = current->next->id;
+            tempName = current->next->name;
+            tempGPA = current->next->gpa;
+            tempGender = current->next->gender;
             current->next->id = current->id;
-            current->id = temp;
+            current->next->name = current->name;
+            current->next->gpa = current->gpa;
+            current->next->gender = current->gender;
+            current->id = tempID;
+            current->name = tempName;
+            current->gpa = tempGPA;
+            current->gender = tempGender;
         }
         current = current->next;
     }
+    return result;
 }
 
 void uppercaseGender(char& flag){
@@ -219,6 +233,13 @@ int main() {
     char genderInput;
     bool programIsRunning{true},notValid{true}, deletionIsRunning{true};
     LinkedList test;
+    LinkedList sortedTest;
+
+    //Test subjects
+    test.push_back(11,4.0,"Abigail",'P');
+    test.push_back(55,4.0,"Ariana",'P');
+    test.push_back(22,4.0,"Billy",'L');
+    test.push_back(33,4.0,"Charlie",'L');
 
     //Program Running Event Loops
     do{
@@ -346,7 +367,8 @@ int main() {
                 break;
             case 3:
                 //Prints the list
-                test.printComplete();
+                sortedTest = bubbleSortByID(test);
+                sortedTest.printComplete();
                 break;
             case 4:
                 //Create task
