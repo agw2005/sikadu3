@@ -79,31 +79,42 @@ struct LinkedList{
         population--;
     }
 
-    void deleteID(long long flag){
+    void deleteIndex(int flag){
+        int index = 1;
+        Node* current = head;
+        Node* previousCurrent = nullptr;
         if(population == 0){
-            std::cout << "There are no elements inside the list\n";
-        } else {
-            if (head->id == flag) {
-                deleteHead();
+            std::cout<<"List is empty!\n";
+        } else if(flag < 1 || flag > population){
+            return;
+        } else if(flag == 1){
+            if(current->next == nullptr){
+                delete current;
+                head->next = nullptr;
+                tail->next = nullptr;
+            } else{
+                head = current -> next;
+                delete current;
             }
-            Node *current = head;
-            Node *previous = nullptr;
-            while (current != nullptr) {
-                if (current->id == flag) {
-                    if (current == tail) {
-                        previous->next = nullptr;
-                        tail = previous;
-                    } else {
-                        previous->next = current->next;
-                    }
-                    delete current;
-                    population--;
-                    return;
-                }
-                previous = current;
-                current = current->next;
+        } else if(flag == population){
+            while(current != tail){
+                previousCurrent = current;
+                current = current -> next;
             }
+            previousCurrent->next = nullptr;
+            tail = previousCurrent;
+            delete current;
         }
+        else{
+            while(index != flag){
+                previousCurrent = current;
+                current = current -> next;
+                index++;
+            }
+            previousCurrent->next = current->next;
+            delete current;
+        }
+        population--;
     }
 
     void deleteName(std::string& flag){
@@ -337,18 +348,14 @@ int main() {
                                 deletionIsRunning = false;
                                 break;
                             case 3:
-                                //Delete by ID
-                                do {
-                                    std::cout << "What is the ID of the student you want to delete?\n";
-                                    std::cin >> menuInput;
-                                    if (!test.duplicateID(menuInput)){
-                                        std::cout << "There is no student by that ID number\n";
-                                    } else {
-                                        test.deleteID(menuInput);
-                                        notValid = false;
-                                    }
-                                } while (notValid);
+                                //Delete by index
+                                std::cout << "What is the roll number of the student you want to delete?\n";
+                                horizontalLine();
+                                std::cin >> menuInput;
+                                test.deleteIndex(menuInput);
+                                notValid = false;
                                 deletionIsRunning = false;
+                                horizontalLine();
                                 break;
                             case 4:
                                 //Delete by name
