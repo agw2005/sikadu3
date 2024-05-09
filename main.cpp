@@ -117,6 +117,28 @@ struct LinkedList{
         population--;
     }
 
+    void deleteID(int flag){
+        Node* current = head;
+        Node* previousCurrent = nullptr;
+        while(current->id != flag){
+            previousCurrent = current;
+            current = current->next;
+        }
+        //std::cout<<"Current : "<<current->id<<"\nPrevious : "<<previousCurrent->id<<"\nNext : "<<(current->next)->id<<std::endl;
+        if(current->next == nullptr){
+            previousCurrent->next = current->next;
+            tail = previousCurrent;
+            delete current;
+        } else if(current == head){
+            head = current -> next;
+            delete current;
+        } else{
+            previousCurrent->next = current->next;
+            delete current;
+        }
+        population--;
+    }
+
     void deleteName(std::string& flag){
         if(population == 0){
             std::cout << "There are no elements inside the list\n";
@@ -244,7 +266,7 @@ void capitalize(std::string& str) {
 int main() {
     //Declarations
     std::string mainMenu = "1. Add student\n2. Delete student\n3. List students\n4. Create a task\n5. Insert a grade\n6. Exit\n";
-    std::string deleteMenu = "1. Delete newest\n2. Delete oldest\n3. Delete by index\n4. Delete by name\n5. Back to main menu\n";
+    std::string deleteMenu = "1. Delete newest\n2. Delete oldest\n3. Delete by index\n4. Delete by ID\n5. Delete by name\n6. Go back to main menu\n";
     int menuInput;
     long long idInput;
     float gpaInput;
@@ -353,11 +375,23 @@ int main() {
                                 horizontalLine();
                                 std::cin >> menuInput;
                                 test.deleteIndex(menuInput);
-                                notValid = false;
                                 deletionIsRunning = false;
                                 horizontalLine();
                                 break;
                             case 4:
+                                //Delete by ID
+                                std::cout << "What is the roll number of the student you want to delete?\n";
+                                horizontalLine();
+                                std::cin >> menuInput;
+                                if(!test.duplicateID(menuInput)){
+                                    std::cout<<"A student by that ID does not exist\n";
+                                } else {
+                                    test.deleteID(menuInput);
+                                }
+                                deletionIsRunning = false;
+                                horizontalLine();
+                                break;
+                            case 5:
                                 //Delete by name
                                 do {
                                     std::cout << "What is the name of the student you want to delete?\n";
@@ -372,7 +406,7 @@ int main() {
                                 } while (notValid);
                                 deletionIsRunning = false;
                                 break;
-                            case 5:
+                            case 6:
                                 deletionIsRunning = false;
                                 break;
                             default:
