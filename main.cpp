@@ -34,38 +34,35 @@ struct LinkedList{
         population++;
     }
 
-    void deleteTail(){
-        if(population == 0) {
-            std::cout << "There are no elements inside the list\n";
-        } else {
-            Node *current = head;
-            Node *previous = nullptr;
-            while (current->next != nullptr) {
-                previous = current;
-                current = current->next;
-            }
-            if (previous != nullptr) {
-                tail = previous;
+    void deleteHead(){
+        Node* temp = head;
+        if(population == 0){
+            std::cout<<"List is empty!\n";
+        } else if(population == 1){
+            delete temp;
+            tail = nullptr;
+            head = nullptr;
+        } else{
+            if(temp->next == nullptr){
+                delete temp;
+                head->next = nullptr;
                 tail->next = nullptr;
-            } else {
-                head = nullptr;
-                tail = nullptr;
+            } else{
+                head = temp -> next;
+                delete temp;
             }
-            delete current;
         }
         population--;
     }
 
-    void deleteHead(){
+    void deleteTail(){
         if(population == 0){
             std::cout << "There are no elements inside the list\n";
         } else {
             Node *temp = head;
             head = head->next;
             delete temp;
-
             population--;
-
             if (head == nullptr) {
                 tail = nullptr;
             }
@@ -144,16 +141,17 @@ struct LinkedList{
             }
         }
         std::cout<<"Population: "<<population<<std::endl;
+        horizontalLine();
     }
 
-    void printPartial() const {
-        Node* current = head;
-        for (int i = 1; i <= population; i++) {
-            std::cout <<"("<< current->id << ")"<<current->name;
-            current = current->next;
-        }
-        std::cout<<std::endl;
-    }
+    //void printPartial() const {
+    //    Node* current = head;
+    //    for (int i = 1; i <= population; i++) {
+    //        std::cout <<"("<< current->id << ")"<<current->name;
+    //        current = current->next;
+    //    }
+    //    std::cout<<std::endl;
+    //}
 
     bool duplicateName(std::string& flag) const{
         Node* current = head;
@@ -321,10 +319,12 @@ int main() {
                             case 1:
                                 //Delete most recent added
                                 test.deleteTail();
+                                deletionIsRunning = false;
                                 break;
                             case 2:
                                 //Delete most oldest added
                                 test.deleteHead();
+                                deletionIsRunning = false;
                                 break;
                             case 3:
                                 //Delete by ID
@@ -338,6 +338,7 @@ int main() {
                                         notValid = false;
                                     }
                                 } while (notValid);
+                                deletionIsRunning = false;
                                 break;
                             case 4:
                                 //Delete by name
@@ -352,6 +353,7 @@ int main() {
                                         notValid = false;
                                     }
                                 } while (notValid);
+                                deletionIsRunning = false;
                                 break;
                             case 5:
                                 deletionIsRunning = false;
@@ -367,8 +369,9 @@ int main() {
                 break;
             case 3:
                 //Prints the list
-                sortedTest = bubbleSortByID(test);
-                sortedTest.printComplete();
+                //sortedTest = bubbleSortByID(test);
+                //sortedTest.printComplete();
+                test.printComplete();
                 break;
             case 4:
                 //Create task
