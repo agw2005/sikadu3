@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 void horizontalLine(){
     std::cout<<"----------------------------------------------------------------------------------------------------"<<std::endl;
@@ -260,6 +261,16 @@ void capitalize(std::string& str) {
     }
 }
 
+void printStringButWithBreaks(std::string theString){
+    for(int i = 0 ; i <= (int)size(theString) ; i+=50){
+        for(int ii = 0 ; ii < 50 && i+ii < (int)size(theString)  ; ii++){
+            std::cout<<theString[i+ii];
+        }
+        std::cout<<"";
+    }
+    std::cout<<'\n';
+}
+
 int quickSortProcess(LinkedList& flag,int start,int end){
     long long tempID;
     std::string tempName;
@@ -360,6 +371,12 @@ int main() {
     bool programIsRunning{true},notValid{true}, deletionIsRunning{true};
     LinkedList test;
     LinkedList sortedTest;
+    bool taskDeadlineValid = true;
+    bool taskDocumentSelectionValid = true;
+    std::string taskTitle, taskDescription, taskDocument, taskDeadlinePhase;
+    int taskDeadline,taskDeadlinePhaseSelection,taskDocumentSelection,taskDocumentAmount;
+    std::vector<std::string> taskDocumentVector;
+    bool taskDeadlinePhaseValid = true;
 
     //Test subjects
     test.push_back(44,4.0,"Douglass",'L');
@@ -512,7 +529,63 @@ int main() {
                 test.printComplete();
                 break;
             case 4:
-                //Create task
+                std::cout << "What is the title of this task you would like to give to your students?\n";
+                std::getline(std::cin, taskTitle);
+
+                std::cout << "Provide the description of the task:\n";
+                std::getline(std::cin, taskDescription);
+
+                std::cout << "Would you like to attach any file?\n1. Yes\n2. No\n";
+                while(taskDocumentSelectionValid) {
+                    std::cin >> taskDocumentSelection;
+                    if (taskDocumentSelection == 1) {
+                        std::cout << "How many files do you want to attach?\n";
+                        std::cin>>taskDocumentAmount;
+                        for(int i = 0 ; i < taskDocumentAmount ; i++){
+                            std::cout << "What is the name of file number "<<i+1<<'\n';
+                            std::cin >> taskDocument;
+                            taskDocumentVector.push_back(taskDocument);
+                        }
+                        taskDocumentSelectionValid = false;
+                    }
+                    else if (taskDocumentSelection == 2){
+                        taskDocument = "-";
+                        taskDocumentSelectionValid = false;
+                    }
+                    else{std::cout << "The value you just entered is beyond our instruction, please try again.\n";}
+                }
+                std::cout << "What is the deadline of this task? (hour from 1 -- 12)\n";
+                while(taskDeadlineValid){
+                    std::cin >> taskDeadline;
+                    if(taskDeadline < 13 && taskDeadline > 0){taskDeadlineValid = false;}
+                    else{
+                        std::cout << "The value you just entered is not a valid hour.\n";
+                    }
+                }
+                std::cout << "1. AM\n2. PM\n";
+                while (taskDeadlinePhaseValid){
+                    std::cin >> taskDeadlinePhaseSelection;
+                    if (taskDeadlinePhaseSelection == 1) {
+                        taskDeadlinePhase = "AM";
+                        taskDeadlinePhaseValid = false;
+                    }
+                    else if (taskDeadlinePhaseSelection == 2) {
+                        taskDeadlinePhase = "PM";
+                        taskDeadlinePhaseValid = false;
+                    }
+                    else { std::cout << "The value you just entered is beyond our instruction, please try again.\n"; }
+                }
+                horizontalLine();
+                std::cout<<"New task created\n";
+                horizontalLine();
+                capitalize(taskTitle);
+                std::cout<<"Title      : "<<taskTitle<<"\nDeadline   : "<<taskDeadline<<" "<<taskDeadlinePhase<<"\nDescription:\n";
+                printStringButWithBreaks(taskDescription);
+                std::cout<<"Attachment(s):\n";
+                for(int i = 0 ; i < taskDocumentVector.size() ; i++){
+                    std::cout<<"> "<<taskDocumentVector[i]<<'\n';
+                }
+                horizontalLine();
                 break;
             case 5:
                 //Insert grade
