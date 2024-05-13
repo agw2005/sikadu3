@@ -185,7 +185,7 @@ struct LinkedList{
         horizontalLine();
     }
 
-    void print(){
+    void printName(){
         Node* current = head;
         if(population == 0){
             std::cout<<"The list is empty!\n";
@@ -193,6 +193,19 @@ struct LinkedList{
         } else{
             for (int i = 1; i <= population; i++) {
                 std::cout <<i<< ". ("<<current->name <<")("<<current->id<< ")(" << current->gender << ")("<<current->gpa<<")" << std::endl;
+                current = current->next;
+            }
+        }
+    }
+
+    void printID(){
+        Node* current = head;
+        if(population == 0){
+            std::cout<<"The list is empty!\n";
+            horizontalLine();
+        } else{
+            for (int i = 1; i <= population; i++) {
+                std::cout <<i<< ". ("<<current->id <<")("<<current->name<< ")(" << current->gender << ")("<<current->gpa<<")" << std::endl;
                 current = current->next;
             }
         }
@@ -231,7 +244,7 @@ struct LinkedList{
 
 };
 
-LinkedList bubbleSortByID(LinkedList flag) {
+LinkedList bubbleSortByName(LinkedList flag) {
     LinkedList result = flag;
     long long tempID;
     std::string tempName;
@@ -239,7 +252,7 @@ LinkedList bubbleSortByID(LinkedList flag) {
     char tempGender;
     Node* current = result.head;
     while (current->next != nullptr) {
-        if (current->id > current->next->id) {
+        if (current->name[0] > current->next->name[0]) {
             tempID = current->next->id;
             tempName = current->next->name;
             tempGPA = current->next->gpa;
@@ -400,7 +413,7 @@ int main() {
     int gradingSelection;
     float newGrade;
 
-    //Test subjects
+    //Test subjects for debugging
     test.push_back(44,4.0,"Douglass",'L');
     test.push_back(11,4.0,"Abigail",'P');
     test.push_back(55,4.0,"Estella",'P');
@@ -475,7 +488,7 @@ int main() {
 
             //Delete student
             case 2:
-                if(test.population == 0){
+                if(test.population < 1){
                     std::cout<<"There is no student to delete\n";
                 } else{
                     do {
@@ -543,97 +556,132 @@ int main() {
                 }
                 break;
             case 3:
-                //Prints the list
-                //sortedTest = bubbleSortByID(test);
-                //sortedTest.printForDebugging();
-                sortedTest = test;
-                quickSort(sortedTest,0,test.population-1);
-                test.printForDebugging();
+                if(test.population < 1){
+                    std::cout<<"List is empty!\n";
+                } else {
+                    std::cout<< "1. Sort by ID\n2. Sort by name\n3. Sort by GPA\n4. Sort by Gender\n5. Sort by time added"<< std::endl;
+                    std::cin>>menuInput;
+                    horizontalLine();
+                    switch (menuInput) {
+                        case 1:
+                            sortedTest = test;
+                            quickSort(sortedTest, 0, test.population - 1);
+                            sortedTest.printID();
+                            break;
+                        case 2:
+                            sortedTest = test;
+                            bubbleSortByName(sortedTest);
+                            sortedTest.printName();
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                        case 5:
+                            test.printName();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                horizontalLine();
+                //sortedTest = test;
+                //quickSort(sortedTest,0,test.population-1);
+                //test.printForDebugging();
                 break;
             case 4:
-                std::cout << "What is the title of this task you would like to give to your students?\n";
-                std::getline(std::cin, taskTitle);
+                if(test.population < 1){
+                    std::cout<<"List is empty!\n";
+                } else {
+                    std::cout << "What is the title of this task you would like to give to your students?\n";
+                    std::getline(std::cin, taskTitle);
 
-                std::cout << "Provide the description of the task:\n";
-                std::getline(std::cin, taskDescription);
+                    std::cout << "Provide the description of the task:\n";
+                    std::getline(std::cin, taskDescription);
 
-                std::cout << "Would you like to attach any file?\n1. Yes\n2. No\n";
-                while(taskDocumentSelectionValid) {
-                    std::cin >> taskDocumentSelection;
-                    if (taskDocumentSelection == 1) {
-                        std::cout << "How many files do you want to attach?\n";
-                        std::cin>>taskDocumentAmount;
-                        for(int i = 0 ; i < taskDocumentAmount ; i++){
-                            std::cout << "What is the name of file number "<<i+1<<'\n';
-                            std::cin >> taskDocument;
-                            taskDocumentVector.push_back(taskDocument);
+                    std::cout << "Would you like to attach any file?\n1. Yes\n2. No\n";
+                    while (taskDocumentSelectionValid) {
+                        std::cin >> taskDocumentSelection;
+                        if (taskDocumentSelection == 1) {
+                            std::cout << "How many files do you want to attach?\n";
+                            std::cin >> taskDocumentAmount;
+                            for (int i = 0; i < taskDocumentAmount; i++) {
+                                std::cout << "What is the name of file number " << i + 1 << '\n';
+                                std::cin >> taskDocument;
+                                taskDocumentVector.push_back(taskDocument);
+                            }
+                            taskDocumentSelectionValid = false;
+                        } else if (taskDocumentSelection == 2) {
+                            taskDocument = "-";
+                            taskDocumentSelectionValid = false;
+                        } else {
+                            std::cout << "The value you just entered is beyond our instruction, please try again.\n";
                         }
-                        taskDocumentSelectionValid = false;
                     }
-                    else if (taskDocumentSelection == 2){
-                        taskDocument = "-";
-                        taskDocumentSelectionValid = false;
+                    std::cout << "What is the deadline of this task? (hour from 1 -- 12)\n";
+                    while (taskDeadlineValid) {
+                        std::cin >> taskDeadline;
+                        if (taskDeadline < 13 && taskDeadline > 0) { taskDeadlineValid = false; }
+                        else {
+                            std::cout << "The value you just entered is not a valid hour.\n";
+                        }
                     }
-                    else{std::cout << "The value you just entered is beyond our instruction, please try again.\n";}
-                }
-                std::cout << "What is the deadline of this task? (hour from 1 -- 12)\n";
-                while(taskDeadlineValid){
-                    std::cin >> taskDeadline;
-                    if(taskDeadline < 13 && taskDeadline > 0){taskDeadlineValid = false;}
-                    else{
-                        std::cout << "The value you just entered is not a valid hour.\n";
+                    std::cout << "1. AM\n2. PM\n";
+                    while (taskDeadlinePhaseValid) {
+                        std::cin >> taskDeadlinePhaseSelection;
+                        if (taskDeadlinePhaseSelection == 1) {
+                            taskDeadlinePhase = "AM";
+                            taskDeadlinePhaseValid = false;
+                        } else if (taskDeadlinePhaseSelection == 2) {
+                            taskDeadlinePhase = "PM";
+                            taskDeadlinePhaseValid = false;
+                        } else {
+                            std::cout << "The value you just entered is beyond our instruction, please try again.\n";
+                        }
                     }
-                }
-                std::cout << "1. AM\n2. PM\n";
-                while (taskDeadlinePhaseValid){
-                    std::cin >> taskDeadlinePhaseSelection;
-                    if (taskDeadlinePhaseSelection == 1) {
-                        taskDeadlinePhase = "AM";
-                        taskDeadlinePhaseValid = false;
+                    horizontalLine();
+                    std::cout << "New task created\n";
+                    horizontalLine();
+                    capitalize(taskTitle);
+                    std::cout << "Title      : " << taskTitle << "\nDeadline   : " << taskDeadline << " "
+                              << taskDeadlinePhase << "\nDescription:\n";
+                    printStringButWithBreaks(taskDescription);
+                    std::cout << "Attachment(s):\n";
+                    for (int i = 0; i < taskDocumentVector.size(); i++) {
+                        std::cout << "> " << taskDocumentVector[i] << '\n';
                     }
-                    else if (taskDeadlinePhaseSelection == 2) {
-                        taskDeadlinePhase = "PM";
-                        taskDeadlinePhaseValid = false;
-                    }
-                    else { std::cout << "The value you just entered is beyond our instruction, please try again.\n"; }
-                }
-                horizontalLine();
-                std::cout<<"New task created\n";
-                horizontalLine();
-                capitalize(taskTitle);
-                std::cout<<"Title      : "<<taskTitle<<"\nDeadline   : "<<taskDeadline<<" "<<taskDeadlinePhase<<"\nDescription:\n";
-                printStringButWithBreaks(taskDescription);
-                std::cout<<"Attachment(s):\n";
-                for(int i = 0 ; i < taskDocumentVector.size() ; i++){
-                    std::cout<<"> "<<taskDocumentVector[i]<<'\n';
                 }
                 horizontalLine();
                 break;
             case 5:
-                std::cout << "Which students will receive a grade?\n";
-                //test.printForDebugging();
-                test.print();
-                std::cout << "0. Cancel\n";
-                std::cin>>gradingSelection;
-                if (gradingSelection != 0) {
-                    outputTheInput(gradingSelection);
-                    std::cout<<"What is the value of the grade?\n";
-                    std::cin>>newGrade;
-                    for(int i = 0 ; i <= gradingSelection-1 ; i++){
-                        if(target == nullptr){
-                            target = test.head;
-                        } else{
-                            target = target ->next;
-                        }
-                    }
-                    target->gpa += newGrade;
-                    target->gpa /= 2.0;
-                    horizontalLine();
-                    std::cout << "Student successfully has received the grade!" << std::endl;
-                    std::cout<<target->name<<" - GPA: "<<target->gpa<<'\n';
+                if(test.population < 1){
+                    std::cout<<"List is empty!\n";
                 } else {
-                    outputTheInput(gradingSelection);
-                    std::cout << "Grading has been cancelled" << std::endl;
+                    std::cout << "Which students will receive a grade?\n";
+                    //test.printForDebugging();
+                    test.printName();
+                    std::cout << "0. Cancel\n";
+                    std::cin >> gradingSelection;
+                    if (gradingSelection != 0) {
+                        outputTheInput(gradingSelection);
+                        std::cout << "What is the value of the grade?\n";
+                        std::cin >> newGrade;
+                        for (int i = 0; i <= gradingSelection - 1; i++) {
+                            if (target == nullptr) {
+                                target = test.head;
+                            } else {
+                                target = target->next;
+                            }
+                        }
+                        target->gpa += newGrade;
+                        target->gpa /= 2.0;
+                        horizontalLine();
+                        std::cout << "Student successfully has received the grade!" << std::endl;
+                        std::cout << target->name << " - GPA: " << target->gpa << '\n';
+                    } else {
+                        outputTheInput(gradingSelection);
+                        std::cout << "Grading has been cancelled" << std::endl;
+                    }
                 }
                 horizontalLine();
                 break;
