@@ -164,7 +164,7 @@ struct LinkedList{
         population--;
     }
 
-    void printComplete() const{
+    void printForDebugging() const{
         Node* current = head;
         if(population == 0){
             std::cout<<"The list is empty!\n";
@@ -183,6 +183,19 @@ struct LinkedList{
         }
         std::cout<<"Population: "<<population<<std::endl;
         horizontalLine();
+    }
+
+    void print(){
+        Node* current = head;
+        if(population == 0){
+            std::cout<<"The list is empty!\n";
+            horizontalLine();
+        } else{
+            for (int i = 1; i <= population; i++) {
+                std::cout <<i<< ". ("<<current->name <<")("<<current->id<< ")(" << current->gender << ")("<<current->gpa<<")" << std::endl;
+                current = current->next;
+            }
+        }
     }
 
     //void printPartial() const {
@@ -359,6 +372,12 @@ void quickSort(LinkedList& flag,int start,int end){
     quickSort(flag,newPivot+1,end);
 }
 
+void outputTheInput(int value){
+    horizontalLine();
+    std::cout<<"Input: "<<value<<'\n';
+    horizontalLine();
+}
+
 int main() {
     //Declarations
     std::string mainMenu = "1. Add student\n2. Delete student\n3. List students\n4. Create a task\n5. Insert a grade\n6. Exit\n";
@@ -377,6 +396,9 @@ int main() {
     int taskDeadline,taskDeadlinePhaseSelection,taskDocumentSelection,taskDocumentAmount;
     std::vector<std::string> taskDocumentVector;
     bool taskDeadlinePhaseValid = true;
+    Node* target = nullptr;
+    int gradingSelection;
+    float newGrade;
 
     //Test subjects
     test.push_back(44,4.0,"Douglass",'L');
@@ -523,10 +545,10 @@ int main() {
             case 3:
                 //Prints the list
                 //sortedTest = bubbleSortByID(test);
-                //sortedTest.printComplete();
+                //sortedTest.printForDebugging();
                 sortedTest = test;
                 quickSort(sortedTest,0,test.population-1);
-                test.printComplete();
+                test.printForDebugging();
                 break;
             case 4:
                 std::cout << "What is the title of this task you would like to give to your students?\n";
@@ -588,7 +610,32 @@ int main() {
                 horizontalLine();
                 break;
             case 5:
-                //Insert grade
+                std::cout << "Which students will receive a grade?\n";
+                //test.printForDebugging();
+                test.print();
+                std::cout << "0. Cancel\n";
+                std::cin>>gradingSelection;
+                if (gradingSelection != 0) {
+                    outputTheInput(gradingSelection);
+                    std::cout<<"What is the value of the grade?\n";
+                    std::cin>>newGrade;
+                    for(int i = 0 ; i <= gradingSelection-1 ; i++){
+                        if(target == nullptr){
+                            target = test.head;
+                        } else{
+                            target = target ->next;
+                        }
+                    }
+                    target->gpa += newGrade;
+                    target->gpa /= 2.0;
+                    horizontalLine();
+                    std::cout << "Student successfully has received the grade!" << std::endl;
+                    std::cout<<target->name<<" - GPA: "<<target->gpa<<'\n';
+                } else {
+                    outputTheInput(gradingSelection);
+                    std::cout << "Grading has been cancelled" << std::endl;
+                }
+                horizontalLine();
                 break;
             case 6:
                 programIsRunning = false;
