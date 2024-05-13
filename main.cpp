@@ -10,6 +10,7 @@ struct Node{
     std::string name;
     char gender;
     Node* next = nullptr;
+    Node* prev = nullptr;
 };
 
 struct LinkedList{
@@ -28,6 +29,7 @@ struct LinkedList{
             head = temp;
             tail = temp;
         } else{
+            temp -> prev = tail;
             tail -> next = temp;
             tail = temp;
         }
@@ -49,6 +51,7 @@ struct LinkedList{
                 tail->next = nullptr;
             } else{
                 head = temp -> next;
+                //head -> prev = nullptr;
                 delete temp;
             }
         }
@@ -257,6 +260,94 @@ void capitalize(std::string& str) {
     }
 }
 
+int quickSortProcess(LinkedList& flag,int start,int end){
+    long long tempID;
+    std::string tempName;
+    float tempGPA;
+    char tempGender;
+    int i = start-1;
+    long long pivotValue;
+    Node* iIndex;
+    Node* jIndex = nullptr;
+    Node* pivotNode = nullptr;
+
+
+    //Find the starting position of j
+    for(int a = 0 ; a <= start ; a++){
+        if(jIndex == nullptr){
+            jIndex = flag.head;
+        } else{
+            jIndex = jIndex->next;
+        }
+    }
+
+
+    iIndex = jIndex->prev;
+
+
+    //Find the position of pivot
+    for(int a = 0 ; a <= end ; a++){
+        if(pivotNode == nullptr){
+            pivotNode = flag.head;
+        } else {
+            pivotNode = pivotNode->next;
+        }
+    }
+    pivotValue = pivotNode->id;
+
+
+    for(int j = start+1 ; j <= end ; j++){
+        if(jIndex->id < pivotValue){
+            i++;
+            if(iIndex == nullptr){
+                iIndex = flag.head;
+            } else{
+                iIndex = iIndex->next;
+            }
+            tempID = iIndex->id;
+            tempName = iIndex->name;
+            tempGPA = iIndex->gpa;
+            tempGender = iIndex->gender;
+            iIndex->id = jIndex->id;
+            iIndex->name = jIndex->name;
+            iIndex->gpa = jIndex->gpa;
+            iIndex->gender = jIndex->gender;
+            jIndex->id = tempID;
+            jIndex->name = tempName;
+            jIndex->gpa = tempGPA;
+            jIndex->gender = tempGender;
+        }
+        jIndex = jIndex->next;
+    }
+    i++;
+    if(iIndex == nullptr){
+        iIndex = flag.head;
+    } else{
+        iIndex = iIndex->next;
+    }
+    tempID = iIndex->id;
+    tempName = iIndex->name;
+    tempGPA = iIndex->gpa;
+    tempGender = iIndex->gender;
+    iIndex->id = pivotNode->id;
+    iIndex->name = pivotNode->name;
+    iIndex->gpa = pivotNode->gpa;
+    iIndex->gender = pivotNode->gender;
+    pivotNode->id = tempID;
+    pivotNode->name = tempName;
+    pivotNode->gpa = tempGPA;
+    pivotNode->gender = tempGender;
+    return i;
+}
+
+
+void quickSort(LinkedList& flag,int start,int end){
+    if(end<=start){return;}
+    int newPivot = quickSortProcess(flag,start,end);
+    quickSort(flag,start,newPivot-1);
+    quickSort(flag,newPivot+1,end);
+}
+
 int main() {
     //Declarations
     std::string mainMenu = "1. Add student\n2. Delete student\n3. List students\n4. Create a task\n5. Insert a grade\n6. Exit\n";
@@ -271,8 +362,9 @@ int main() {
     LinkedList sortedTest;
 
     //Test subjects
+    test.push_back(44,4.0,"Douglass",'L');
     test.push_back(11,4.0,"Abigail",'P');
-    test.push_back(55,4.0,"Ariana",'P');
+    test.push_back(55,4.0,"Estella",'P');
     test.push_back(22,4.0,"Billy",'L');
     test.push_back(33,4.0,"Charlie",'L');
 
@@ -415,6 +507,8 @@ int main() {
                 //Prints the list
                 //sortedTest = bubbleSortByID(test);
                 //sortedTest.printComplete();
+                sortedTest = test;
+                quickSort(sortedTest,0,test.population-1);
                 test.printComplete();
                 break;
             case 4:
