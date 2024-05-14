@@ -270,33 +270,6 @@ struct LinkedList{
 
 };
 
-LinkedList bubbleSortByName(LinkedList flag) {
-    LinkedList result = flag;
-    long long tempID;
-    std::string tempName;
-    float tempGPA;
-    char tempGender;
-    Node* current = result.head;
-    while (current->next != nullptr) {
-        if (current->name[0] > current->next->name[0]) {
-            tempID = current->next->id;
-            tempName = current->next->name;
-            tempGPA = current->next->gpa;
-            tempGender = current->next->gender;
-            current->next->id = current->id;
-            current->next->name = current->name;
-            current->next->gpa = current->gpa;
-            current->next->gender = current->gender;
-            current->id = tempID;
-            current->name = tempName;
-            current->gpa = tempGPA;
-            current->gender = tempGender;
-        }
-        current = current->next;
-    }
-    return result;
-}
-
 void uppercaseGender(char& flag){
     if(flag == 'l'){
         flag = 'L';
@@ -321,6 +294,36 @@ void printStringButWithBreaks(std::string theString){
         std::cout<<"";
     }
     std::cout<<'\n';
+}
+
+void bubbleSortByName(LinkedList flag) {
+    long long tempID;
+    std::string tempName;
+    float tempGPA;
+    char tempGender;
+    Node* i_check = flag.head;
+    Node* ii_check = flag.head;
+    for(int i = 1 ; i <= flag.population ; i++){
+        for(int ii = 1 ; ii <= flag.population ; ii++){
+            if(i != ii && i_check->name[0] < ii_check->name[0]){
+                tempName = i_check->name;
+                tempID = i_check->id;
+                tempGPA = i_check->gpa;
+                tempGender = i_check->gender;
+                i_check->name = ii_check->name;
+                i_check->id = ii_check->id;
+                i_check->gpa = ii_check->gpa;
+                i_check->gender = ii_check->gender;
+                ii_check->name = tempName;
+                ii_check->id = tempID;
+                ii_check->gpa = tempGPA;
+                ii_check->gender = tempGender;
+            }
+            ii_check = ii_check->next;
+        }
+        ii_check = flag.head;
+        i_check = i_check->next;
+    }
 }
 
 int quickSortProcess(LinkedList& flag,int start,int end){
@@ -404,11 +407,11 @@ int quickSortProcess(LinkedList& flag,int start,int end){
 }
 
 
-void quickSort(LinkedList& flag,int start,int end){
+void quickSortByID(LinkedList& flag,int start,int end){
     if(end<=start){return;}
     int newPivot = quickSortProcess(flag,start,end);
-    quickSort(flag,start,newPivot-1);
-    quickSort(flag,newPivot+1,end);
+    quickSortByID(flag,start,newPivot-1);
+    quickSortByID(flag,newPivot+1,end);
 }
 
 void selectionSortByGPA(LinkedList& flag){
@@ -444,6 +447,29 @@ void selectionSortByGPA(LinkedList& flag){
         currentNext = current->next;
     }
 }
+
+void insertionSortByGender(LinkedList& flag){
+    Node* tempNode;
+    char tempNodeValue;
+    Node* previousCurrent;
+    Node* current = flag.head->next;
+    while(current != nullptr){
+        tempNode =current;
+        tempNodeValue = tempNode->gender;
+        previousCurrent = current->prev;
+        while(previousCurrent != nullptr && previousCurrent->gender > tempNodeValue){
+            (previousCurrent->next)->gender = previousCurrent->gender;
+            if(previousCurrent->prev == nullptr){
+                previousCurrent->gender = tempNodeValue;
+                previousCurrent = previousCurrent->prev;
+            } else{
+                previousCurrent = previousCurrent->prev;
+            }
+        }
+        current = current->next;
+    }
+}
+
 
 void outputTheInput(int value){
     horizontalLine();
@@ -625,7 +651,7 @@ int main() {
                     switch (menuInput) {
                         case 1:
                             sortedTest = test;
-                            quickSort(sortedTest, 0, test.population - 1);
+                            quickSortByID(sortedTest, 0, test.population - 1);
                             sortedTest.printID();
                             break;
                         case 2:
@@ -639,6 +665,9 @@ int main() {
                             sortedTest.printGPA();
                             break;
                         case 4:
+                            sortedTest = test;
+                            insertionSortByGender(sortedTest);
+                            sortedTest.printGender();
                             break;
                         case 5:
                             test.printName();
@@ -648,9 +677,6 @@ int main() {
                     }
                 }
                 horizontalLine();
-                //sortedTest = test;
-                //quickSort(sortedTest,0,test.population-1);
-                //test.printForDebugging();
                 break;
             case 4:
                 if(test.population < 1){
