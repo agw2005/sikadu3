@@ -347,9 +347,7 @@ int quickSortProcess(LinkedList& flag,int start,int end){
         }
     }
 
-
     iIndex = jIndex->prev;
-
 
     //Find the position of pivot
     for(int a = 0 ; a <= end ; a++){
@@ -448,28 +446,35 @@ void selectionSortByGPA(LinkedList& flag){
     }
 }
 
-void insertionSortByGender(LinkedList& flag){
-    Node* tempNode;
-    char tempNodeValue;
-    Node* previousCurrent;
-    Node* current = flag.head->next;
-    while(current != nullptr){
-        tempNode =current;
-        tempNodeValue = tempNode->gender;
-        previousCurrent = current->prev;
-        while(previousCurrent != nullptr && previousCurrent->gender > tempNodeValue){
-            (previousCurrent->next)->gender = previousCurrent->gender;
-            if(previousCurrent->prev == nullptr){
-                previousCurrent->gender = tempNodeValue;
-                previousCurrent = previousCurrent->prev;
-            } else{
-                previousCurrent = previousCurrent->prev;
+void bubbleSortByGender(LinkedList flag) {
+    long long tempID;
+    std::string tempName;
+    float tempGPA;
+    char tempGender;
+    Node* i_check = flag.head;
+    Node* ii_check = flag.head;
+    for(int i = 1 ; i <= flag.population ; i++){
+        for(int ii = 1 ; ii <= flag.population ; ii++){
+            if(i != ii && i_check->gender < ii_check->gender){
+                tempName = i_check->name;
+                tempID = i_check->id;
+                tempGPA = i_check->gpa;
+                tempGender = i_check->gender;
+                i_check->name = ii_check->name;
+                i_check->id = ii_check->id;
+                i_check->gpa = ii_check->gpa;
+                i_check->gender = ii_check->gender;
+                ii_check->name = tempName;
+                ii_check->id = tempID;
+                ii_check->gpa = tempGPA;
+                ii_check->gender = tempGender;
             }
+            ii_check = ii_check->next;
         }
-        current = current->next;
+        ii_check = flag.head;
+        i_check = i_check->next;
     }
 }
-
 
 void outputTheInput(int value){
     horizontalLine();
@@ -666,7 +671,7 @@ int main() {
                             break;
                         case 4:
                             sortedTest = test;
-                            insertionSortByGender(sortedTest);
+                            bubbleSortByGender(sortedTest);
                             sortedTest.printGender();
                             break;
                         case 5:
