@@ -185,7 +185,7 @@ struct LinkedList{
         horizontalLine();
     }
 
-    void printName(){
+    void printName() const{
         Node* current = head;
         if(population == 0){
             std::cout<<"The list is empty!\n";
@@ -198,7 +198,7 @@ struct LinkedList{
         }
     }
 
-    void printID(){
+    void printID() const{
         Node* current = head;
         if(population == 0){
             std::cout<<"The list is empty!\n";
@@ -206,6 +206,32 @@ struct LinkedList{
         } else{
             for (int i = 1; i <= population; i++) {
                 std::cout <<i<< ". ("<<current->id <<")("<<current->name<< ")(" << current->gender << ")("<<current->gpa<<")" << std::endl;
+                current = current->next;
+            }
+        }
+    }
+
+    void printGPA() const{
+        Node* current = head;
+        if(population == 0){
+            std::cout<<"The list is empty!\n";
+            horizontalLine();
+        } else{
+            for (int i = 1; i <= population; i++) {
+                std::cout <<i<< ". ("<<current->gpa <<")("<<current->name<< ")(" << current->id << ")("<<current->gender<<")" << std::endl;
+                current = current->next;
+            }
+        }
+    }
+
+    void printGender() const{
+        Node* current = head;
+        if(population == 0){
+            std::cout<<"The list is empty!\n";
+            horizontalLine();
+        } else{
+            for (int i = 1; i <= population; i++) {
+                std::cout <<i<< ". ("<<current->gender <<")("<<current->name<< ")(" << current->id << ")("<<current->gpa<<")" << std::endl;
                 current = current->next;
             }
         }
@@ -385,6 +411,40 @@ void quickSort(LinkedList& flag,int start,int end){
     quickSort(flag,newPivot+1,end);
 }
 
+void selectionSortByGPA(LinkedList& flag){
+    long long tempID;
+    std::string tempName;
+    float tempGPA;
+    char tempGender;
+    Node* current = flag.head;
+    Node* minimum = current;
+    Node* currentNext = current->next;
+    for(int i = 1 ; i < flag.population ; i++) {
+        //1 2 3 4
+        while (currentNext != nullptr) {
+            if (currentNext->gpa > minimum->gpa) {
+                minimum = currentNext;
+            }
+            currentNext = currentNext->next;
+        }
+        tempGPA = current->gpa;
+        tempName = current->name;
+        tempID = current->id;
+        tempGender = current->gender;
+        current->gpa = minimum->gpa;
+        current->name = minimum->name;
+        current->id = minimum->id;
+        current->gender = minimum->gender;
+        minimum->gpa = tempGPA;
+        minimum->name = tempName;
+        minimum->id = tempID;
+        minimum->gender = tempGender;
+        current = current->next;
+        minimum = current;
+        currentNext = current->next;
+    }
+}
+
 void outputTheInput(int value){
     horizontalLine();
     std::cout<<"Input: "<<value<<'\n';
@@ -414,11 +474,11 @@ int main() {
     float newGrade;
 
     //Test subjects for debugging
-    test.push_back(44,4.0,"Douglass",'L');
+    test.push_back(44,2.5,"Douglass",'L');
     test.push_back(11,4.0,"Abigail",'P');
-    test.push_back(55,4.0,"Estella",'P');
-    test.push_back(22,4.0,"Billy",'L');
-    test.push_back(33,4.0,"Charlie",'L');
+    test.push_back(55,2.0,"Estella",'P');
+    test.push_back(22,3.5,"Billy",'L');
+    test.push_back(33,3.0,"Charlie",'L');
 
     //Program Running Event Loops
     do{
@@ -574,6 +634,9 @@ int main() {
                             sortedTest.printName();
                             break;
                         case 3:
+                            sortedTest = test;
+                            selectionSortByGPA(sortedTest);
+                            sortedTest.printGPA();
                             break;
                         case 4:
                             break;
