@@ -46,15 +46,9 @@ struct LinkedList{
             tail = nullptr;
             head = nullptr;
         } else{
-            if(temp->next == nullptr){
-                delete temp;
-                head->next = nullptr;
-                tail->next = nullptr;
-            } else{
-                head = temp -> next;
-                //head -> prev = nullptr;
-                delete temp;
-            }
+            head = temp -> next;
+            head -> prev = nullptr;
+            delete temp;
         }
         population--;
     }
@@ -73,9 +67,6 @@ struct LinkedList{
                 previousCurrent = current;
                 current = current -> next;
             }
-            //std::cout<<"Current : "<<current->val<<"\nPrevious : "<<previousCurrent->val<<std::endl;
-            // WORKING PROPERLY (current points to tail)
-
             previousCurrent->next = nullptr;
             tail = previousCurrent;
             delete current;
@@ -128,7 +119,6 @@ struct LinkedList{
             previousCurrent = current;
             current = current->next;
         }
-        //std::cout<<"Current : "<<current->id<<"\nPrevious : "<<previousCurrent->id<<"\nNext : "<<(current->next)->id<<std::endl;
         if(current->next == nullptr){
             previousCurrent->next = current->next;
             tail = previousCurrent;
@@ -164,26 +154,26 @@ struct LinkedList{
         population--;
     }
 
-    void printForDebugging() const{
-        Node* current = head;
-        if(population == 0){
-            std::cout<<"The list is empty!\n";
-            horizontalLine();
-        } else{
-            for (int i = 1; i <= population; i++) {
-                std::cout << "Index-" << i << " : " << current->name <<" ("<<current->gender<< ") (NIM:" << current->id << ')' << std::endl;
-                if (current == tail) {
-                    std::cout << "Next(NULL)\n";
-                } else {
-                    std::cout << "Next(" << (current->next)->name << ")\n";
-                }
-                horizontalLine();
-                current = current->next;
-            }
-        }
-        std::cout<<"Population: "<<population<<std::endl;
-        horizontalLine();
-    }
+    //void printForDebugging() const{
+    //    Node* current = head;
+    //    if(population == 0){
+    //        std::cout<<"The list is empty!\n";
+    //        horizontalLine();
+    //    } else{
+    //        for (int i = 1; i <= population; i++) {
+    //            std::cout << "Index-" << i << " : " << current->name <<" ("<<current->gender<< ") (NIM:" << current->id << ')' << std::endl;
+    //            if (current == tail) {
+    //                std::cout << "Next(NULL)\n";
+    //            } else {
+    //                std::cout << "Next(" << (current->next)->name << ")\n";
+    //            }
+    //            horizontalLine();
+    //            current = current->next;
+    //        }
+    //    }
+    //    std::cout<<"Population: "<<population<<std::endl;
+    //    horizontalLine();
+    //}
 
     void printName() const{
         Node* current = head;
@@ -421,7 +411,6 @@ void selectionSortByGPA(LinkedList& flag){
     Node* minimum = current;
     Node* currentNext = current->next;
     for(int i = 1 ; i < flag.population ; i++) {
-        //1 2 3 4
         while (currentNext != nullptr) {
             if (currentNext->gpa > minimum->gpa) {
                 minimum = currentNext;
@@ -474,12 +463,6 @@ void bubbleSortByGender(LinkedList flag) {
         ii_check = flag.head;
         i_check = i_check->next;
     }
-}
-
-void outputTheInput(int value){
-    horizontalLine();
-    std::cout<<"Input: "<<value<<'\n';
-    horizontalLine();
 }
 
 int main() {
@@ -752,12 +735,11 @@ int main() {
                     std::cout<<"List is empty!\n";
                 } else {
                     std::cout << "Which students will receive a grade?\n";
-                    //test.printForDebugging();
                     test.printName();
-                    std::cout << "0. Cancel\n";
+                    std::cout << "0. Cancel\nInput:\n";
                     std::cin >> gradingSelection;
+                    horizontalLine();
                     if (gradingSelection != 0) {
-                        outputTheInput(gradingSelection);
                         std::cout << "What is the value of the grade?\n";
                         std::cin >> newGrade;
                         for (int i = 0; i <= gradingSelection - 1; i++) {
@@ -773,7 +755,6 @@ int main() {
                         std::cout << "Student successfully has received the grade!" << std::endl;
                         std::cout << target->name << " - GPA: " << target->gpa << '\n';
                     } else {
-                        outputTheInput(gradingSelection);
                         std::cout << "Grading has been cancelled" << std::endl;
                     }
                 }
