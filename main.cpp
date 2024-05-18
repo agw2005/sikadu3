@@ -1,71 +1,72 @@
 #include <iostream>
 #include <vector>
 
-void horizontalLine(){
-    std::cout<<"----------------------------------------------------------------------------------------------------"<<std::endl;
+void horizontalLine() {
+    std::cout << "----------------------------------------------------------------------------------------------------"
+              << std::endl;
 }
 
-struct Node{
+struct Node {
     long long id;
     float gpa;
     std::string name;
     char gender;
-    Node* next = nullptr;
-    Node* prev = nullptr;
+    Node *next = nullptr;
+    Node *prev = nullptr;
 };
 
-struct LinkedList{
-    Node* head = nullptr;
-    Node* tail = nullptr;
+struct LinkedList {
+    Node *head = nullptr;
+    Node *tail = nullptr;
     int population = 0;
 
-    void push_back(long long idInput, float ipkInput, std::string namaInput, char genderInput){
-        Node* temp = new Node();
-        temp -> id = idInput;
-        temp -> gpa = ipkInput;
-        temp -> name = namaInput;
-        temp -> gender = genderInput;
+    void push_back(long long idInput, float ipkInput, std::string namaInput, char genderInput) {
+        Node *temp = new Node();
+        temp->id = idInput;
+        temp->gpa = ipkInput;
+        temp->name = namaInput;
+        temp->gender = genderInput;
 
-        if(head == nullptr){
+        if (head == nullptr) {
             head = temp;
             tail = temp;
-        } else{
-            temp -> prev = tail;
-            tail -> next = temp;
+        } else {
+            temp->prev = tail;
+            tail->next = temp;
             tail = temp;
         }
         population++;
     }
 
-    void deleteHead(){
-        Node* temp = head;
-        if(population == 0){
-            std::cout<<"List is empty!\n";
-        } else if(population == 1){
+    void deleteHead() {
+        Node *temp = head;
+        if (population == 0) {
+            std::cout << "List is empty!\n";
+        } else if (population == 1) {
             delete temp;
             tail = nullptr;
             head = nullptr;
-        } else{
-            head = temp -> next;
-            head -> prev = nullptr;
+        } else {
+            head = temp->next;
+            head->prev = nullptr;
             delete temp;
         }
         population--;
     }
 
-    void deleteTail(){
-        Node* current = head;
-        Node* previousCurrent = nullptr;
-        if(population == 0){
-            std::cout<<"List is empty!\n";
-        } else if(population == 1){
+    void deleteTail() {
+        Node *current = head;
+        Node *previousCurrent = nullptr;
+        if (population == 0) {
+            std::cout << "List is empty!\n";
+        } else if (population == 1) {
             delete current;
             tail = nullptr;
             head = nullptr;
-        } else{
-            while(current != tail){
+        } else {
+            while (current != tail) {
                 previousCurrent = current;
-                current = current -> next;
+                current = current->next;
             }
             previousCurrent->next = nullptr;
             tail = previousCurrent;
@@ -74,81 +75,86 @@ struct LinkedList{
         population--;
     }
 
-    void deleteIndex(int flag){
+    void deleteIndex(int flag) {
         int index = 1;
-        Node* current = head;
-        Node* previousCurrent = nullptr;
-        if(population == 0){
-            std::cout<<"List is empty!\n";
-        } else if(flag < 1 || flag > population){
+        Node *current = head;
+        Node *previousCurrent = nullptr;
+        if (population == 0) {
+            std::cout << "List is empty!\n";
+        } else if (flag < 1 || flag > population) {
             return;
-        } else if(flag == 1){
-            if(current->next == nullptr){
+        } else if (flag == 1) {
+            if (current->next == nullptr) {
                 delete current;
-                head->next = nullptr;
-                tail->next = nullptr;
-            } else{
-                head = current -> next;
+                head = nullptr;
+                tail = nullptr;
+            } else {
+                head = current->next;
+                head->prev = nullptr;
                 delete current;
             }
-        } else if(flag == population){
-            while(current != tail){
+        } else if (flag == population) {
+            while (current != tail) {
                 previousCurrent = current;
-                current = current -> next;
+                current = current->next;
             }
             previousCurrent->next = nullptr;
             tail = previousCurrent;
             delete current;
-        }
-        else{
-            while(index != flag){
+        } else {
+            while (index != flag) {
                 previousCurrent = current;
-                current = current -> next;
+                current = current->next;
                 index++;
             }
             previousCurrent->next = current->next;
+            (current->next)->prev = previousCurrent;
             delete current;
         }
         population--;
     }
 
-    void deleteID(int flag){
-        Node* current = head;
-        Node* previousCurrent = nullptr;
-        while(current->id != flag){
+    void deleteID(long long flag) {
+        Node *current = head;
+        Node *previousCurrent = nullptr;
+        while (current->id != flag) {
             previousCurrent = current;
             current = current->next;
         }
-        if(current->next == nullptr){
+        if (current->next == nullptr) {
             previousCurrent->next = current->next;
             tail = previousCurrent;
             delete current;
-        } else if(current == head){
-            head = current -> next;
+        } else if (current == head) {
+            head = current->next;
+            head->prev = nullptr;
             delete current;
-        } else{
+        } else {
             previousCurrent->next = current->next;
+            (current->next)->prev = previousCurrent;
             delete current;
         }
         population--;
     }
 
-    void deleteName(const std::string& flag){
-        Node* current = head;
-        Node* previousCurrent = nullptr;
-        while(current->name != flag){
+    void deleteName(const std::string &flag) {
+        Node *current = head;
+        Node *previousCurrent = nullptr;
+        while (current->name != flag) {
             previousCurrent = current;
             current = current->next;
         }
-        if(current->next == nullptr){
+        if (current->next == nullptr) {
             previousCurrent->next = current->next;
             tail = previousCurrent;
             delete current;
-        } else if(current == head){
-            head = current -> next;
+        } else if (current == head) {
+            head = current->next;
+            head->prev = nullptr;
             delete current;
-        } else{
+        } else {
             previousCurrent->next = current->next;
+            (current->next)->prev = previousCurrent;
             delete current;
         }
         population--;
@@ -175,53 +181,57 @@ struct LinkedList{
     //    horizontalLine();
     //}
 
-    void printName() const{
-        Node* current = head;
-        if(population == 0){
-            std::cout<<"The list is empty!\n";
+    void printName() const {
+        Node *current = head;
+        if (population == 0) {
+            std::cout << "The list is empty!\n";
             horizontalLine();
-        } else{
+        } else {
             for (int i = 1; i <= population; i++) {
-                std::cout <<i<< ". ("<<current->name <<")("<<current->id<< ")(" << current->gender << ")("<<current->gpa<<")" << std::endl;
+                std::cout << i << ". (" << current->name << ")(" << current->id << ")(" << current->gender << ")("
+                          << current->gpa << ")" << std::endl;
                 current = current->next;
             }
         }
     }
 
-    void printID() const{
-        Node* current = head;
-        if(population == 0){
-            std::cout<<"The list is empty!\n";
+    void printID() const {
+        Node *current = head;
+        if (population == 0) {
+            std::cout << "The list is empty!\n";
             horizontalLine();
-        } else{
+        } else {
             for (int i = 1; i <= population; i++) {
-                std::cout <<i<< ". ("<<current->id <<")("<<current->name<< ")(" << current->gender << ")("<<current->gpa<<")" << std::endl;
+                std::cout << i << ". (" << current->id << ")(" << current->name << ")(" << current->gender << ")("
+                          << current->gpa << ")" << std::endl;
                 current = current->next;
             }
         }
     }
 
-    void printGPA() const{
-        Node* current = head;
-        if(population == 0){
-            std::cout<<"The list is empty!\n";
+    void printGPA() const {
+        Node *current = head;
+        if (population == 0) {
+            std::cout << "The list is empty!\n";
             horizontalLine();
-        } else{
+        } else {
             for (int i = 1; i <= population; i++) {
-                std::cout <<i<< ". ("<<current->gpa <<")("<<current->name<< ")(" << current->id << ")("<<current->gender<<")" << std::endl;
+                std::cout << i << ". (" << current->gpa << ")(" << current->name << ")(" << current->id << ")("
+                          << current->gender << ")" << std::endl;
                 current = current->next;
             }
         }
     }
 
-    void printGender() const{
-        Node* current = head;
-        if(population == 0){
-            std::cout<<"The list is empty!\n";
+    void printGender() const {
+        Node *current = head;
+        if (population == 0) {
+            std::cout << "The list is empty!\n";
             horizontalLine();
-        } else{
+        } else {
             for (int i = 1; i <= population; i++) {
-                std::cout <<i<< ". ("<<current->gender <<")("<<current->name<< ")(" << current->id << ")("<<current->gpa<<")" << std::endl;
+                std::cout << i << ". (" << current->gender << ")(" << current->name << ")(" << current->id << ")("
+                          << current->gpa << ")" << std::endl;
                 current = current->next;
             }
         }
@@ -236,23 +246,23 @@ struct LinkedList{
     //    std::cout<<std::endl;
     //}
 
-    bool duplicateName(std::string& flag) const{
-        Node* current = head;
-        for(int i = 1 ; i <= population ; i++){
-            if(current->name == flag){return true;}
-            else{
-                current = current -> next;
+    bool duplicateName(std::string &flag) const {
+        Node *current = head;
+        for (int i = 1; i <= population; i++) {
+            if (current->name == flag) { return true; }
+            else {
+                current = current->next;
             }
         }
         return false;
     }
 
-    bool duplicateID(long long flag) const{
-        Node* current = head;
-        for(int i = 1 ; i <= population ; i++){
-            if(current->id == flag){return true;}
-            else{
-                current = current -> next;
+    bool duplicateID(long long flag) const {
+        Node *current = head;
+        for (int i = 1; i <= population; i++) {
+            if (current->id == flag) { return true; }
+            else {
+                current = current->next;
             }
         }
         return false;
@@ -260,15 +270,15 @@ struct LinkedList{
 
 };
 
-void uppercaseGender(char& flag){
-    if(flag == 'l'){
+void uppercaseGender(char &flag) {
+    if (flag == 'l') {
         flag = 'L';
-    } else if(flag == 'p'){
+    } else if (flag == 'p') {
         flag = 'P';
     }
 }
 
-void capitalize(std::string& str) {
+void capitalize(std::string &str) {
     for (int i = 0; i < str.length(); i++) {
         if (i == 0 || (str[i - 1] == ' ' && i < str.length())) {
             str[i] = std::toupper(str[i]);
@@ -276,14 +286,14 @@ void capitalize(std::string& str) {
     }
 }
 
-void printStringButWithBreaks(std::string theString){
-    for(int i = 0 ; i <= (int)size(theString) ; i+=50){
-        for(int ii = 0 ; ii < 50 && i+ii < (int)size(theString)  ; ii++){
-            std::cout<<theString[i+ii];
+void printStringButWithBreaks(std::string theString) {
+    for (int i = 0; i <= (int) size(theString); i += 50) {
+        for (int ii = 0; ii < 50 && i + ii < (int) size(theString); ii++) {
+            std::cout << theString[i + ii];
         }
-        std::cout<<"";
+        std::cout << "";
     }
-    std::cout<<'\n';
+    std::cout << '\n';
 }
 
 void bubbleSortByName(LinkedList flag) {
@@ -291,11 +301,11 @@ void bubbleSortByName(LinkedList flag) {
     std::string tempName;
     float tempGPA;
     char tempGender;
-    Node* i_check = flag.head;
-    Node* ii_check = flag.head;
-    for(int i = 1 ; i <= flag.population ; i++){
-        for(int ii = 1 ; ii <= flag.population ; ii++){
-            if(i != ii && i_check->name[0] < ii_check->name[0]){
+    Node *i_check = flag.head;
+    Node *ii_check = flag.head;
+    for (int i = 1; i <= flag.population; i++) {
+        for (int ii = 1; ii <= flag.population; ii++) {
+            if (i != ii && i_check->name[0] < ii_check->name[0]) {
                 tempName = i_check->name;
                 tempID = i_check->id;
                 tempGPA = i_check->gpa;
@@ -316,23 +326,23 @@ void bubbleSortByName(LinkedList flag) {
     }
 }
 
-int quickSortProcess(LinkedList& flag,int start,int end){
+int quickSortProcess(LinkedList &flag, int start, int end) {
     long long tempID;
     std::string tempName;
     float tempGPA;
     char tempGender;
-    int i = start-1;
+    int i = start - 1;
     long long pivotValue;
-    Node* iIndex;
-    Node* jIndex = nullptr;
-    Node* pivotNode = nullptr;
+    Node *iIndex;
+    Node *jIndex = nullptr;
+    Node *pivotNode = nullptr;
 
 
     //Find the starting position of j
-    for(int a = 0 ; a <= start ; a++){
-        if(jIndex == nullptr){
+    for (int a = 0; a <= start; a++) {
+        if (jIndex == nullptr) {
             jIndex = flag.head;
-        } else{
+        } else {
             jIndex = jIndex->next;
         }
     }
@@ -340,8 +350,8 @@ int quickSortProcess(LinkedList& flag,int start,int end){
     iIndex = jIndex->prev;
 
     //Find the position of pivot
-    for(int a = 0 ; a <= end ; a++){
-        if(pivotNode == nullptr){
+    for (int a = 0; a <= end; a++) {
+        if (pivotNode == nullptr) {
             pivotNode = flag.head;
         } else {
             pivotNode = pivotNode->next;
@@ -350,12 +360,12 @@ int quickSortProcess(LinkedList& flag,int start,int end){
     pivotValue = pivotNode->id;
 
 
-    for(int j = start+1 ; j <= end ; j++){
-        if(jIndex->id < pivotValue){
+    for (int j = start + 1; j <= end; j++) {
+        if (jIndex->id < pivotValue) {
             i++;
-            if(iIndex == nullptr){
+            if (iIndex == nullptr) {
                 iIndex = flag.head;
-            } else{
+            } else {
                 iIndex = iIndex->next;
             }
             tempID = iIndex->id;
@@ -374,9 +384,9 @@ int quickSortProcess(LinkedList& flag,int start,int end){
         jIndex = jIndex->next;
     }
     i++;
-    if(iIndex == nullptr){
+    if (iIndex == nullptr) {
         iIndex = flag.head;
-    } else{
+    } else {
         iIndex = iIndex->next;
     }
     tempID = iIndex->id;
@@ -394,23 +404,22 @@ int quickSortProcess(LinkedList& flag,int start,int end){
     return i;
 }
 
-
-void quickSortByID(LinkedList& flag,int start,int end){
-    if(end<=start){return;}
-    int newPivot = quickSortProcess(flag,start,end);
-    quickSortByID(flag,start,newPivot-1);
-    quickSortByID(flag,newPivot+1,end);
+void quickSortByID(LinkedList &flag, int start, int end) {
+    if (end <= start) { return; }
+    int newPivot = quickSortProcess(flag, start, end);
+    quickSortByID(flag, start, newPivot - 1);
+    quickSortByID(flag, newPivot + 1, end);
 }
 
-void selectionSortByGPA(LinkedList& flag){
+void selectionSortByGPA(LinkedList &flag) {
     long long tempID;
     std::string tempName;
     float tempGPA;
     char tempGender;
-    Node* current = flag.head;
-    Node* minimum = current;
-    Node* currentNext = current->next;
-    for(int i = 1 ; i < flag.population ; i++) {
+    Node *current = flag.head;
+    Node *minimum = current;
+    Node *currentNext = current->next;
+    for (int i = 1; i < flag.population; i++) {
         while (currentNext != nullptr) {
             if (currentNext->gpa > minimum->gpa) {
                 minimum = currentNext;
@@ -440,11 +449,11 @@ void bubbleSortByGender(LinkedList flag) {
     std::string tempName;
     float tempGPA;
     char tempGender;
-    Node* i_check = flag.head;
-    Node* ii_check = flag.head;
-    for(int i = 1 ; i <= flag.population ; i++){
-        for(int ii = 1 ; ii <= flag.population ; ii++){
-            if(i != ii && i_check->gender < ii_check->gender){
+    Node *i_check = flag.head;
+    Node *ii_check = flag.head;
+    for (int i = 1; i <= flag.population; i++) {
+        for (int ii = 1; ii <= flag.population; ii++) {
+            if (i != ii && i_check->gender < ii_check->gender) {
                 tempName = i_check->name;
                 tempID = i_check->id;
                 tempGPA = i_check->gpa;
@@ -474,97 +483,97 @@ int main() {
     float gpaInput;
     std::string nameInput;
     char genderInput;
-    bool programIsRunning{true},notValid{true}, deletionIsRunning{true};
+    bool programIsRunning{true}, notValid{true}, deletionIsRunning{true};
     LinkedList test;
     LinkedList sortedTest;
     bool taskDeadlineValid = true;
     bool taskDocumentSelectionValid = true;
     std::string taskTitle, taskDescription, taskDocument, taskDeadlinePhase;
-    int taskDeadline,taskDeadlinePhaseSelection,taskDocumentSelection,taskDocumentAmount;
+    int taskDeadline, taskDeadlinePhaseSelection, taskDocumentSelection, taskDocumentAmount;
     std::vector<std::string> taskDocumentVector;
     bool taskDeadlinePhaseValid = true;
-    Node* target = nullptr;
+    Node *target = nullptr;
     int gradingSelection;
     float newGrade;
 
     //Test subjects for debugging
-    test.push_back(44,2.5,"Douglass",'L');
-    test.push_back(11,4.0,"Abigail",'P');
-    test.push_back(55,2.0,"Estella",'P');
-    test.push_back(22,3.5,"Billy",'L');
-    test.push_back(33,3.0,"Charlie",'L');
+    test.push_back(44, 2.5, "Douglass", 'L');
+    test.push_back(11, 4.0, "Abigail", 'P');
+    test.push_back(55, 2.0, "Estella", 'P');
+    test.push_back(22, 3.5, "Billy", 'L');
+    test.push_back(33, 3.0, "Charlie", 'L');
 
     //Program Running Event Loops
-    do{
-        std::cout<<mainMenu<<"Input:\n";
-        std::cin>>menuInput;
+    do {
+        std::cout << mainMenu << "Input:\n";
+        std::cin >> menuInput;
         std::cin.ignore(1, '\n');
         horizontalLine();
-        switch(menuInput){
+        switch (menuInput) {
 
             //Add student
             case 1:
                 //Name
-                do{
+                do {
                     std::cout << "Enter the name of the student:\n";
                     std::getline(std::cin, nameInput);
                     capitalize(nameInput);
                     horizontalLine();
-                    if(test.duplicateName(nameInput)){
+                    if (test.duplicateName(nameInput)) {
                         std::cout << "The student by that name already exist! Please try again.\n";
                         horizontalLine();
-                    } else{
+                    } else {
                         notValid = false;
                     }
-                }while(notValid);
+                } while (notValid);
                 //ID
-                do{
-                    std::cout<<"Enter the student ID:\n";
+                do {
+                    std::cout << "Enter the student ID:\n";
                     horizontalLine();
-                    std::cin>>idInput;
+                    std::cin >> idInput;
                     horizontalLine();
-                    if(idInput < 1){
+                    if (idInput < 1) {
                         notValid = true;
                         std::cout << "The student ID you just entered is not a valid ID, please try again.\n";
                         horizontalLine();
-                    } else if(test.duplicateID(idInput)){
+                    } else if (test.duplicateID(idInput)) {
                         notValid = true;
                         std::cout << "The student ID already exist, please try again.\n";
                         horizontalLine();
-                    } else{notValid = false;}
-                }while(notValid);
+                    } else { notValid = false; }
+                } while (notValid);
                 //Gender
-                do{
-                    std::cout<<"Enter student gender:\n";
-                    std::cin>>genderInput;
+                do {
+                    std::cout << "Enter student gender:\n";
+                    std::cin >> genderInput;
                     horizontalLine();
-                    if(genderInput != 'L' && genderInput != 'P' && genderInput != 'l' && genderInput != 'p'){
+                    if (genderInput != 'L' && genderInput != 'P' && genderInput != 'l' && genderInput != 'p') {
                         notValid = true;
                         std::cout << "The gender you entered is not valid, please try again.\n";
                         horizontalLine();
-                    } else{notValid = false;}
-                } while(notValid);
+                    } else { notValid = false; }
+                } while (notValid);
                 uppercaseGender(genderInput);
                 //GPA
-                do{
-                    std::cout<<"Enter the student grade this semester:\n";
-                    std::cin>>gpaInput;
+                do {
+                    std::cout << "Enter the student grade this semester:\n";
+                    std::cin >> gpaInput;
                     horizontalLine();
-                    if(gpaInput < 0.0 || gpaInput > 4.0){
+                    if (gpaInput < 0.0 || gpaInput > 4.0) {
                         notValid = true;
                         std::cout << "The grade you entered is not valid, please try again.\n";
                         horizontalLine();
-                    } else{notValid = false;}
-                } while(notValid);
-                test.push_back(idInput, gpaInput , nameInput, genderInput);
+                    } else { notValid = false; }
+                } while (notValid);
+                test.push_back(idInput, gpaInput, nameInput, genderInput);
                 notValid = true;
                 break;
 
-            //Delete student
+                //Delete student
             case 2:
-                if(test.population < 1){
-                    std::cout<<"There is no student to delete\n";
-                } else{
+                if (test.population < 1) {
+                    std::cout << "There is no student to delete\n";
+                } else {
                     do {
                         std::cout << deleteMenu;
                         horizontalLine();
@@ -596,8 +605,8 @@ int main() {
                                 horizontalLine();
                                 std::cin >> menuInput;
                                 horizontalLine();
-                                if(!test.duplicateID(menuInput)){
-                                    std::cout<<"A student by that ID does not exist\n";
+                                if (!test.duplicateID(menuInput)) {
+                                    std::cout << "A student by that ID does not exist\n";
                                 } else {
                                     test.deleteID(menuInput);
                                 }
@@ -610,7 +619,7 @@ int main() {
                                 horizontalLine();
                                 std::cin >> nameInput;
                                 capitalize(nameInput);
-                                if (!test.duplicateName(nameInput)){
+                                if (!test.duplicateName(nameInput)) {
                                     std::cout << "There is no student by that name\n";
                                 } else {
                                     test.deleteName(nameInput);
@@ -622,7 +631,8 @@ int main() {
                                 deletionIsRunning = false;
                                 break;
                             default:
-                                std::cout<< "The value you just entered is beyond our instruction, please try again.\n";
+                                std::cout
+                                        << "The value you just entered is beyond our instruction, please try again.\n";
                                 break;
                         }
                     } while (deletionIsRunning);
@@ -630,11 +640,13 @@ int main() {
                 }
                 break;
             case 3:
-                if(test.population < 1){
-                    std::cout<<"List is empty!\n";
+                if (test.population < 1) {
+                    std::cout << "List is empty!\n";
                 } else {
-                    std::cout<< "1. Sort by ID\n2. Sort by name\n3. Sort by GPA\n4. Sort by Gender\n5. Sort by time added"<< std::endl;
-                    std::cin>>menuInput;
+                    std::cout
+                            << "1. Sort by ID\n2. Sort by name\n3. Sort by GPA\n4. Sort by Gender\n5. Sort by time added"
+                            << std::endl;
+                    std::cin >> menuInput;
                     horizontalLine();
                     switch (menuInput) {
                         case 1:
@@ -667,8 +679,8 @@ int main() {
                 horizontalLine();
                 break;
             case 4:
-                if(test.population < 1){
-                    std::cout<<"List is empty!\n";
+                if (test.population < 1) {
+                    std::cout << "List is empty!\n";
                 } else {
                     std::cout << "What is the title of this task you would like to give to your students?\n";
                     std::getline(std::cin, taskTitle);
@@ -731,8 +743,8 @@ int main() {
                 horizontalLine();
                 break;
             case 5:
-                if(test.population < 1){
-                    std::cout<<"List is empty!\n";
+                if (test.population < 1) {
+                    std::cout << "List is empty!\n";
                 } else {
                     std::cout << "Which students will receive a grade?\n";
                     test.printName();
@@ -768,5 +780,5 @@ int main() {
                 horizontalLine();
                 break;
         }
-    }while(programIsRunning);
+    } while (programIsRunning);
 }
