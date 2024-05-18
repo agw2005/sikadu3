@@ -85,10 +85,11 @@ struct LinkedList{
         } else if(flag == 1){
             if(current->next == nullptr){
                 delete current;
-                head->next = nullptr;
-                tail->next = nullptr;
+                head = nullptr;
+                tail = nullptr;
             } else{
                 head = current -> next;
+                head->prev = nullptr;
                 delete current;
             }
         } else if(flag == population){
@@ -107,12 +108,13 @@ struct LinkedList{
                 index++;
             }
             previousCurrent->next = current->next;
+            (current->next)->prev = previousCurrent;
             delete current;
         }
         population--;
     }
 
-    void deleteID(int flag){
+    void deleteID(long long flag){
         Node* current = head;
         Node* previousCurrent = nullptr;
         while(current->id != flag){
@@ -125,9 +127,11 @@ struct LinkedList{
             delete current;
         } else if(current == head){
             head = current -> next;
+            head -> prev = nullptr;
             delete current;
         } else{
             previousCurrent->next = current->next;
+            (current->next)->prev = previousCurrent;
             delete current;
         }
         population--;
@@ -146,9 +150,11 @@ struct LinkedList{
             delete current;
         } else if(current == head){
             head = current -> next;
+            head -> prev = nullptr;
             delete current;
         } else{
             previousCurrent->next = current->next;
+            (current->next)->prev = previousCurrent;
             delete current;
         }
         population--;
@@ -393,7 +399,6 @@ int quickSortProcess(LinkedList& flag,int start,int end){
     pivotNode->gender = tempGender;
     return i;
 }
-
 
 void quickSortByID(LinkedList& flag,int start,int end){
     if(end<=start){return;}
