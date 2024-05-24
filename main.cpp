@@ -264,6 +264,18 @@ struct LinkedList{
         return false;
     }
 
+    void elementAtIndex(int flag){
+        if(flag == -1){
+            std::cout<<"The student not within the list\n";
+        }
+        Node* current = nullptr;
+        for(int i = 0 ; i < flag ; i++){
+            if(current== nullptr){current=head;}
+            else{current = current->next;}
+        }
+        std::cout<<"Student found:\nName: "<<current->name<<" ("<<current->gender<<")"<<"\nID: "<<current->id<<"\nGPA: "<<current->gpa<<'\n';
+    }
+
 };
 
 void uppercaseGender(char& flag){
@@ -278,6 +290,8 @@ void capitalize(std::string& str) {
     for (int i = 0; i < str.length(); i++) {
         if (i == 0 || (str[i - 1] == ' ' && i < str.length())) {
             str[i] = std::toupper(str[i]);
+        } else{
+            str[i] = std::tolower(str[i]);
         }
     }
 }
@@ -470,11 +484,49 @@ void bubbleSortByGender(LinkedList flag) {
     }
 }
 
+void linearSearchName(std::string& nameInput, LinkedList list){
+    Node* current = list.head;
+    while(current != nullptr){
+        if(current->name == nameInput){
+            std::cout<<"Student found:\nName: "<<current->name<<" ("<<current->gender<<")"<<"\nID: "<<current->id<<"\nGPA: "<<current->gpa<<'\n';
+            return;
+        }
+        current = current->next;
+    }
+    std::cout<<"The name \""<<nameInput<<"\" is not within the list\n";
+}
+
+int binarySearchID(LinkedList list ,long long flag){
+    int low,high,middle;
+    long long value;
+    Node* midNode;
+    low = 0;
+    high = list.population;
+    while(low <= high){
+        midNode = nullptr;
+        middle = low + (high - low) / 2;
+
+        //Find the middle Node
+        for(int a = 0 ; a < middle ; a++){
+            if(midNode== nullptr){midNode=list.head;}
+            else{midNode = midNode->next;}
+        }
+        value = midNode->id;
+
+        if(value < flag){
+            low = middle+1;
+        } else if(value > flag){
+            high = middle-1;
+        } else{return middle;}
+    }
+    return -1;
+}
+
 int main() {
     //Declarations
-    std::string mainMenu = "1. Add student\n2. Delete student\n3. List students\n4. Create a task\n5. Insert a grade\n6. Exit\n";
-    std::string deleteMenu = "1. Delete newest\n2. Delete oldest\n3. Delete by index\n4. Delete by ID\n5. Delete by name\n6. Go back to main menu\n";
-    int menuInput;
+    std::string mainMenu = "1. Add student\n2. Delete student\n3. List students\n4. Create a task\n5. Insert a grade\n6. Search student\n7. Exit\n";
+    std::string deleteMenu = "1. Delete newest\n2. Delete oldest\n3. Delete by index\n4. Delete by ID\n5. Delete by name\n7. Go back to main menu\n";
+    int menuInput, searchIndex;
     long long idInput;
     float gpaInput;
     std::string nameInput;
@@ -495,9 +547,11 @@ int main() {
     //Test subjects for debugging
     test.push_back(44,2.5,"Douglass",'L');
     test.push_back(11,4.0,"Abigail",'P');
+    test.push_back(77,1.0,"Goldilock",'P');
     test.push_back(55,2.0,"Estella",'P');
     test.push_back(22,3.5,"Billy",'L');
     test.push_back(33,3.0,"Charlie",'L');
+    test.push_back(66,1.5,"Fey",'P');
 
     //Program Running Event Loops
     do{
@@ -766,6 +820,32 @@ int main() {
                 horizontalLine();
                 break;
             case 6:
+                std::cout<<"1. Search by name\n2. Search by ID\n3. Exit\n";
+                std::cin>>menuInput;
+                std::cin.ignore(1, '\n');
+                horizontalLine();
+                if(menuInput == 1){
+                    std::cout<<"Enter the name of the student you wish to search\n";
+                    horizontalLine();
+                    std::getline(std::cin,nameInput);
+                    horizontalLine();
+                    capitalize(nameInput);
+                    linearSearchName(nameInput,test);
+                } else if(menuInput == 2){
+                    sortedTest = test;
+                    quickSortByID(sortedTest, 0, test.population - 1);
+                    std::cout<<"Enter the ID of the student you wish to search\n";
+                    horizontalLine();
+                    std::cin>>idInput;
+                    horizontalLine();
+                    searchIndex = binarySearchID(sortedTest,idInput);
+                    test.elementAtIndex(searchIndex);
+                } else{
+                    std::cout<<"Exited search\n";
+                }
+                horizontalLine();
+                break;
+            case 7:
                 programIsRunning = false;
                 break;
             default:
