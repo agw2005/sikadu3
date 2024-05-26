@@ -525,7 +525,7 @@ int binarySearchID(LinkedList list ,long long flag){
 int main() {
     //Declarations
     std::string mainMenu = "1. Add student\n2. Delete student\n3. List students\n4. Create a task\n5. Insert a grade\n6. Search student\n7. Exit\n";
-    std::string deleteMenu = "1. Delete newest\n2. Delete oldest\n3. Delete by index\n4. Delete by ID\n5. Delete by name\n7. Go back to main menu\n";
+    std::string deleteMenu = "1. Delete newest\n2. Delete oldest\n3. Delete by index\n4. Delete by ID\n5. Delete by name\n6. Go back to main menu\n";
     int menuInput, searchIndex;
     long long idInput;
     float gpaInput;
@@ -604,7 +604,7 @@ int main() {
                     } else{notValid = false;}
                 } while(notValid);
                 uppercaseGender(genderInput);
-                //GPA
+                //GPA = ipk
                 do{
                     std::cout<<"Enter the student grade this semester:\n";
                     std::cin>>gpaInput;
