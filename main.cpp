@@ -628,6 +628,7 @@ int main() {
                         std::cout << deleteMenu;
                         horizontalLine();
                         std::cin >> menuInput;
+                        std::cin.ignore(1, '\n');
                         horizontalLine();
                         switch (menuInput) {
                             case 1:
@@ -667,7 +668,7 @@ int main() {
                                 //Delete by name
                                 std::cout << "What is the name of the student you want to delete?\n";
                                 horizontalLine();
-                                std::cin >> nameInput;
+                                std::getline(std::cin, nameInput);
                                 capitalize(nameInput);
                                 if (!test.duplicateName(nameInput)){
                                     std::cout << "There is no student by that name\n";
