@@ -297,7 +297,7 @@ void capitalize(std::string& str) {
 }
 
 void printStringButWithBreaks(std::string theString){
-    for(int i = 0 ; i <= (int)size(theString) ; i+=50){
+    for(int i = 0 ; i <= (int)size(theString) ; i+=25){
         for(int ii = 0 ; ii < 50 && i+ii < (int)size(theString)  ; ii++){
             std::cout<<theString[i+ii];
         }
